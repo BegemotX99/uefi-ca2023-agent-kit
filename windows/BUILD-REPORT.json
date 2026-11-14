@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "archive": "UEFI-CA2023-AutoDetect-Windows-x64-Portable.zip",
+  "size": 21288979,
+  "sha256": "63ee653daf54baaa541207d15ac4a2b28b1b6b3f063a3d8665c25374015362fc",
+  "platform": "Windows x64; validated on Windows 11",
+  "versions": {
+    "python": "3.12.14",
+    "cryptography": "50.0.2",
+    "pyinstaller": "6.22.0",
+    "openssl": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)",
+    "uefiextract": "NE alpha 76 (Oct 24 2026)"
+  },
+  "unit_tests": {
+    "total": 21,
+    "status": "PASS"
+  },
+  "packaged_tests": {
+    "runtime": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification"
+      ],
+      "eligibility": null
+    },
+    "f8": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification",
+        "Complete candidate build with all backend and independent parser checks",
+        "Save image/report/log and verify readback; input preserved"
+      ],
+      "eligibility": "eligible"
+    },
+    "h9s001": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification",
+        "Complete candidate build with all backend and independent parser checks",
+        "Save image/report/log and verify readback; input preserved"
+      ],
+      "eligibility": "eligible"
+    },
+    "h9s002": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification",
+        "Complete candidate build with all backend and independent parser checks",
+        "Save image/report/log and verify readback; input preserved"
+      ],
+      "eligibility": "eligible"
+    },
+    "mr9s": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification",
+        "Complete candidate build with all backend and independent parser checks",
+        "Save image/report/log and verify readback; input preserved"
+      ],
+      "eligibility": "eligible"
+    },
+    "unsupported-mr9a": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification",
+        "Unsupported image remains inspection-only; no output saved"
+      ],
+      "eligibility": "inspection-only"
+    },
+    "unsupported-zx": {
+      "status": "PASS",
+      "checks": [
+        "Tk GUI creates Open/Analyse/Save/log and starts with Save disabled",
+        "Bundled native OpenSSL runs without PATH lookup",
+        "Bundled UEFIExtract runs without PATH lookup",
+        "All four bundled Microsoft DER certificates match pinned fingerprints",
+        "Fresh encrypted local RSA owner key generation",
+        "Auth2 signing and independent bundled OpenSSL verification",
+        "Unsupported image remains inspection-only; no output saved"
+      ],
+      "eligibility": "inspection-only"
+    }
+  },
+  "corrupted_dependency": "PASS: refused as expected",
+  "gui_handlers": {
+    "status": "PASS",
+    "checks": [
+      "Create owner keys button generates encrypted local key/public certificate",
+      "Open button selects BIOS and clears Save state",
+      "Analyse button completes worker/signature/parser validation with live log and enables Save",
+      "Save button writes and reads back image, report and log",
+      "Unsupported native code remains inspection-only with Save disabled"
+    ]
+  },
+  "environment": "ZIP extracted into a path with spaces; PATH restricted to Windows directories; Python/Tcl/OpenSSL environment overrides removed.",
+  "signing": "Windows EXE is not Authenticode-signed; generated firmware Auth2 signatures are independently verified with bundled OpenSSL."
+}

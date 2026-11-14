@@ -6,6 +6,7 @@ Start by asking your agent to read this repository's `AGENTS.md` and `skills/uef
 
 ## What you get
 
+- [Portable Windows EXE in one ZIP](windows/README.md), with Open, Analyse, Save As, live log and all runtime dependencies included.
 - [Four hardware-tested original/modified BIOS pairs](bioses/README.md), published as full 16 MiB release ZIPs. The maintainer confirmed successful tests of both images for F8 V6.0, MR9S, H9S001 and H9S002 on 14 November 2026.
 - A standard-library Python inspector for Intel SPI maps, directly visible AMI FFS volumes, compressed factory key files, and pinned Microsoft certificate fingerprints.
 - An automatic builder for the supported AMI layout and four reviewed enrollment-driver families. Different whole-image hashes, motherboard names and discovered volume offsets do not require individual profiles. Unknown native code and unsupported layouts remain inspection-only.

@@ -21,6 +21,8 @@ REFERENCES = Path(__file__).resolve().parent.parent / 'references'
 GLOBAL = UUID('8be4df61-93ca-11d2-aa0d-00e098032b8c').bytes_le
 SECURITY = UUID('d719b2cb-3d3a-4596-a3bc-dad00e67656f').bytes_le
 OWNER = UUID('77fa9abd-0359-4d32-bd60-28f4e78f784b').bytes_le
+OPENSSL = 'openssl'
+PROCESS_FLAGS = subprocess.CREATE_NO_WINDOW if hasattr(subprocess, 'CREATE_NO_WINDOW') else 0
 
 
 def reviewed(data):
@@ -137,14 +139,19 @@ def write_new(path, data):
         raise ValueError(f'File readback failed for {path}')
 
 
-def generate_owner(args):
+def generate_owner(args, password=None):
     from cryptography import x509
     from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
     if args.key.exists() or args.cert.exists() or args.key.resolve() == args.cert.resolve():
         raise ValueError('Choose two distinct unused owner-key paths')
-    password = getpass.getpass('Password for the encrypted private PEM key: ').encode()
-    if len(password) < 12 or password != getpass.getpass('Repeat password: ').encode():
+    interactive = password is None
+    if interactive:
+        password = getpass.getpass('Password for the encrypted private PEM key: ').encode()
+        repeat = getpass.getpass('Repeat password: ').encode()
+    else:
+        repeat = password
+    if len(password) < 12 or password != repeat:
         raise ValueError('Use a matching password of at least 12 bytes')
     key = rsa.generate_private_key(public_exponent=65537,key_size=3072)
     name = x509.Name([x509.NameAttribute(x509.NameOID.COMMON_NAME,args.name)])
@@ -159,7 +166,10 @@ def generate_owner(args):
     public = cert.public_bytes(serialization.Encoding.DER)
     write_new(args.key, private)
     write_new(args.cert, public)
-    print(json.dumps(dict(public_certificate=str(args.cert),sha256=digest(public)),indent=2))
+    result = dict(public_certificate=str(args.cert),sha256=digest(public))
+    if interactive:
+        print(json.dumps(result,indent=2))
+    return result
 
 
 def auth2(name, payload, key, cert):
@@ -190,9 +200,10 @@ def auth2(name, payload, key, cert):
         folder = Path(directory)
         (folder/'message.bin').write_bytes(content)
         (folder/'signature.der').write_bytes(cms)
-        subprocess.run(['openssl','cms','-verify','-binary','-inform','DER','-in',str(folder/'signature.der'),
+        subprocess.run([OPENSSL,'cms','-verify','-binary','-inform','DER','-in',str(folder/'signature.der'),
                         '-content',str(folder/'message.bin'),'-noverify','-out',str(folder/'verified.bin')],
-                       check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
+                       check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,
+                       creationflags=PROCESS_FLAGS,timeout=60)
         if (folder/'verified.bin').read_bytes() != content:
             raise ValueError('Signed-content verification failed')
     return timestamp+struct.pack('<IHH',24+len(signed_data),0x200,0xef1)+AUTH_GUID+signed_data+payload
@@ -211,7 +222,7 @@ def pack_default(header, auth):
 def independent_parser(data, image, executable):
     """Parse both temporary images before any deliverable is created."""
     version = subprocess.run([executable, '--version'], check=True, capture_output=True,
-                             timeout=30).stdout.decode(errors='replace').strip()
+                             timeout=30,creationflags=PROCESS_FLAGS).stdout.decode(errors='replace').strip()
     if not version:
         raise ValueError('Independent parser did not identify its version')
     diagnostics = []
@@ -220,7 +231,7 @@ def independent_parser(data, image, executable):
             path = Path(directory)/name
             path.write_bytes(content)
             result = subprocess.run([executable, str(path), 'report'], check=True,
-                                    capture_output=True, timeout=180)
+                                    capture_output=True, timeout=180,creationflags=PROCESS_FLAGS)
             report_path = Path(str(path)+'.report.txt')
             if not report_path.is_file() or not report_path.stat().st_size:
                 raise ValueError('Independent UEFIExtract did not produce a nonempty report')
@@ -232,7 +243,7 @@ def independent_parser(data, image, executable):
                 diagnostics_sha256=digest(diagnostics[0][0]+b'\x00'+diagnostics[0][1]))
 
 
-def build(args):
+def build(args, password=None, save=True, progress=None):
     from cryptography import x509
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
@@ -240,14 +251,21 @@ def build(args):
         raise ValueError('This builder implements owner-PK migration. Explicit --replace-platform-key is required.')
     if args.output.exists() or args.report.exists() or args.output.resolve()==args.report.resolve():
         raise ValueError('Output image and report need distinct unused paths')
+    emit = progress or (lambda message: None)
+    emit('Read input and validate detected layout, FIT, factory key baseline and native driver family.')
     data = read_image(args.image)
+    if getattr(args,'expected_sha256',digest(data)) != digest(data):
+        raise ValueError('Input changed since inspection; analyse it again')
     profile, volume, files, slots = prepare_layout(data)
+    emit('PASS: '+profile['enrollment_family']+'; key volume '+hex(volume[0])+'..'+hex(volume[1]))
     supplied = getattr(args, 'uefiextract', None)
     extractor = str(supplied.resolve()) if supplied else shutil.which('UEFIExtract') or shutil.which('uefiextract')
     if not extractor or not Path(extractor).is_file():
         raise ValueError('Independent validation requires UEFIExtract on PATH or --uefiextract PATH')
     cert = x509.load_der_x509_certificate(args.owner_cert.read_bytes())
-    password = getpass.getpass('Private PEM key password: ').encode()
+    emit('Validate owner certificate, encrypted private key and four pinned Microsoft certificates.')
+    if password is None:
+        password = getpass.getpass('Private PEM key password: ').encode()
     key = serialization.load_pem_private_key(args.owner_key.read_bytes(),password=password)
     if not isinstance(key,rsa.RSAPrivateKey) or key.key_size<2048 or key.public_key().public_numbers()!=cert.public_key().public_numbers():
         raise ValueError('Expected matching RSA owner key and certificate, at least 2048 bits')
@@ -264,6 +282,7 @@ def build(args):
             certificates[fingerprint] = payload
     if set(certificates)!=set(expected.values()):
         raise ValueError('Directory must contain the four pinned Microsoft 2023 DER certificates')
+    emit('PASS: owner key matches certificate; all four Microsoft DER fingerprints match.')
     old = {name:signature_lists(item[3])[0] for name,item in slots.items()}
     payloads = dict(old)
     payloads['PK'] = esl(cert.public_bytes(serialization.Encoding.DER))
@@ -274,6 +293,7 @@ def build(args):
     original_tail = tail
     replacements = {}
     for name in ('PK','KEK','db'):
+        emit('Sign and independently verify '+name+' Auth2; rebuild compressed FFS and check erased-space bounds.')
         offset, nxt, header, _ = slots[name]
         packed = pack_default(header,auth2(name,payloads[name],key,cert))
         aligned = packed+b'\xff'*(-len(packed)%8)
@@ -284,6 +304,7 @@ def build(args):
         replacements[name] = tail
         tail += len(aligned)
     image = bytes(image)
+    emit('Validate final FFS checksums, unique defaults, retained entries, unchanged dbx and unrelated bytes.')
     final = list(ffs_files(image,volume))
     if not all(ok for *_,ok in final) or len(final)!=len(files)+3:
         raise ValueError('Final FFS inventory failed')
@@ -314,6 +335,7 @@ def build(args):
             begin = None
     if begin is not None:
         changed_ranges.append([begin, len(image)])
+    emit('Run independent UEFIExtract on original and candidate; compare diagnostics.')
     independent = independent_parser(data, image, extractor)
     report.update(base_profile=profile['id'],input_sha256=digest(data),
                   eligibility=profile, independent_parser=independent,
@@ -324,9 +346,12 @@ def build(args):
                   modified_allocations={name:list(slots[name][:2]) for name in replacements},
                   appended_allocation=[original_tail,tail])
     # Build and verify everything in memory before creating either deliverable.
-    write_new(args.output,image)
-    write_new(args.report,(json.dumps(report,indent=2)+'\n').encode())
-    print(json.dumps(dict(output=str(args.output),sha256=digest(image),size=len(image),report=str(args.report)),indent=2))
+    emit('PASS: all checks completed. Output SHA-256: '+digest(image))
+    if save:
+        write_new(args.output,image)
+        write_new(args.report,(json.dumps(report,indent=2)+'\n').encode())
+        print(json.dumps(dict(output=str(args.output),sha256=digest(image),size=len(image),report=str(args.report)),indent=2))
+    return image, report
 
 
 def main():
