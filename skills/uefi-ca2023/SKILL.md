@@ -14,13 +14,13 @@ Work from the supplied stock firmware and its exact hash. Ask only for missing f
 
 Run `python scripts/uefi_ca2023.py inspect INPUT` with paths relative to this skill directory, or resolve the absolute script path. The tool needs Python 3.11+. Record input size/hash, flash map, build identity, factory files, parsed certificates, ambiguities and parser errors. Review [firmware-workflow.md](references/firmware-workflow.md) for the exact storage format. GUID discovery alone establishes a candidate location. Known GUID absence means deeper extraction is needed.
 
-For an unfamiliar image, trace its factory-key enrollment path, validate the native Auth2 parsers where relevant, and document the evidence before expanding `references/reviewed-images.json`. Read [troubleshooting.md](references/troubleshooting.md) for observed failures. The builder rejects unreviewed inputs.
+Read [automatic-detection.md](references/automatic-detection.md). The builder detects storage bounds and matches complete native-driver sets against `references/enrollment-families.json`. Whole-image hashes in `reviewed-images.json` provide optional historical identity and never authorize unknown code. A new board using a supported family and the reviewed trust baseline needs no image profile. For unmatched code or storage, trace its factory-key enrollment path and validate the native Auth2 parsers before adding a family/adapter. Read [troubleshooting.md](references/troubleshooting.md) for observed failures.
 
 ## Resolve key policy and build
 
 Read [certificates-and-signing.md](references/certificates-and-signing.md). Match all four pinned Microsoft DER fingerprints. Preserve required existing trust entries and follow the requested dbx policy. Disclose PK changes and control of its corresponding private key. Use encrypted keys owned by the user or an explicitly selected maintainer.
 
-The supplied builder supports an explicit owner-PK replacement on exact reviewed AMI test-key images. Use its `keygen` command only when key generation is requested or authorized by the migration policy. Use `build --help` for required arguments. It preserves unrelated image bytes, places replacements in erased space, and verifies generated signatures with OpenSSL. Do not reuse a reference owner's private identity implicitly.
+The supplied builder supports an explicit owner-PK replacement for detected supported AMI test-key layouts and reviewed enrollment families. Use its `keygen` command only when key generation is requested or authorized by the migration policy. Use `build --help` for required arguments. It preserves unrelated image bytes, places replacements in erased space, verifies generated signatures with OpenSSL and requires an independent UEFIExtract comparison before saving. Provide `--uefiextract PATH` if it is outside PATH. Do not reuse a reference owner's private identity implicitly.
 
 Other OEM storage, enrollment policy, capsule signatures, verified boot coverage, or PK-preservation requirements need their own adapters. Report the exact constraint when no supported path has been established.
 

@@ -29,7 +29,7 @@ The OpenSSL example assumes you saved that certificate under the indicated name.
 | Python 3.11+ | All supplied CLI operations | [Python](https://www.python.org/downloads/); inspection uses the standard library. |
 | cryptography | Generate owner keys or build images | Install `requirements-build.txt`; [project documentation](https://cryptography.io/en/latest/). |
 | OpenSSL | Build and independent signature checks | [OpenSSL](https://www.openssl.org/); make `openssl version` work in the build shell. |
-| UEFITool NE and UEFIExtract | Firmware review and independent output parsing | [LongSoft releases](https://github.com/LongSoft/UEFITool/releases); inspect files, decompress sections and compare diagnostics. NE inspection and legacy editing capabilities differ; this builder constructs files itself. |
+| UEFITool NE and UEFIExtract | Firmware review; UEFIExtract is mandatory for every build | [LongSoft releases](https://github.com/LongSoft/UEFITool/releases); inspect files, decompress sections and compare diagnostics. Supply `--uefiextract PATH` or add it to PATH. NE inspection and legacy editing capabilities differ; this builder constructs files itself. |
 | Git | Fetch and pin source revisions | [Git](https://git-scm.com/downloads); optional if using a downloaded source archive. |
 | Ghidra and its supported JDK | Unfamiliar enrollment drivers or changed code | [Ghidra releases and install instructions](https://github.com/NationalSecurityAgency/ghidra); decompile extracted PE/TE executables. Use the JDK required by your selected release, rather than assuming a fixed Java version. |
 | REA | Optional agent integration for reverse engineering | [REA](https://github.com/morluto/rea); connects an agent to installed analysis engines. A skill alone does not install/register the MCP server or supply Ghidra/Java. Follow that project's client/provider setup. |
@@ -38,7 +38,7 @@ The OpenSSL example assumes you saved that certificate under the indicated name.
 | Elevated Windows PowerShell | Post-flash verification | Windows SecureBoot cmdlets read enabled state and enrolled variables. |
 | Board-compatible flasher/programmer | Physical testing only | Select for the exact board, chip and voltage. It is separate from the image builder and reverse-engineering stack. |
 
-A Ghidra or REA installation is unnecessary to rebuild an exact reviewed image with this CLI. They become useful when proving support for another firmware family. QEMU/OVMF can test generic UEFI applications but cannot reproduce an X99 board's memory training, SPI access policy or vendor enrollment implementation.
+A Ghidra or REA installation is unnecessary to build an image matching a supported enrollment family with this CLI. They become useful when proving support for another implementation. QEMU/OVMF can test generic UEFI applications but cannot reproduce an X99 board's memory training, SPI access policy or vendor enrollment implementation.
 
 ```powershell
 python --version

@@ -1,9 +1,10 @@
-"""Inspect AMI factory defaults and build reviewed CA 2023 migration candidates."""
+"""Detect compatible AMI layouts and build validated CA 2023 migration candidates."""
 import argparse
 from datetime import datetime, timezone, timedelta
 import getpass
 import json
 import lzma
+import shutil
 from pathlib import Path
 import struct
 import subprocess
@@ -30,7 +31,7 @@ def reviewed(data):
                  (len(data) == 0x800000 and digest(data[start:]) == item['bios_sha256'])), None)
 
 
-def inventory(data):
+def inventory(data, assess=True):
     start, end = intel_bios_region(data) or (0, len(data))
     found = []
     errors = []
@@ -48,15 +49,44 @@ def inventory(data):
                                                     for title, fingerprint in CERTIFICATES.get(name, {}).items()}))
         except (ValueError, lzma.LZMAError) as error:
             errors.append(dict(volume=volume[0], error=str(error)))
-    return dict(size=len(data), sha256=digest(data), bios_region=intel_bios_region(data),
+    report = dict(size=len(data), sha256=digest(data), bios_region=intel_bios_region(data),
                 reviewed_image=reviewed(data), factory_defaults=found, parse_errors=errors,
                 interpretation='Factory defaults only. Enrolled NVRAM and Windows servicing need separate verification.')
+    if assess:
+        try:
+            evidence, volume, files, _ = prepare_layout(data)
+            report['automatic_patch'] = dict(status='eligible', **evidence,
+                                            key_volume=[volume[0], volume[1]],
+                                            erased_tail=[files[-1][1], volume[1]],
+                                            note='Preflight only; signing, capacity and independent parser checks still required at build time.')
+        except (ValueError, lzma.LZMAError) as error:
+            report['automatic_patch'] = dict(status='inspection-only', reason=str(error))
+    return report
+
+
+def load_families():
+    return json.loads((REFERENCES/'enrollment-families.json').read_text())
+
+
+def enrollment_family(files):
+    drivers = [(str(UUID(bytes_le=h[:16])), digest(h+b), h) for _,_,h,b,_ in files
+               if h[:16] in DRIVER_GUIDS]
+    if len(drivers) != len(DRIVER_GUIDS) or len({g for g,_,_ in drivers}) != len(DRIVER_GUIDS):
+        raise ValueError('Expected one unambiguous set of native enrollment drivers')
+    if any(h[23] != 0xf8 for _,_,h in drivers):
+        raise ValueError('Native enrollment driver is not in the reviewed active FFS state')
+    fingerprints = {g:sha for g,sha,_ in drivers}
+    matches = [f for f in load_families() if f['driver_hashes'] == fingerprints]
+    if len(matches) != 1:
+        raise ValueError('Native enrollment code does not match one reviewed family; code review is required, not a new board profile')
+    return matches[0]
 
 
 def prepare_layout(data):
-    profile = reviewed(data)
-    if profile is None:
-        raise ValueError('Input is outside the supplied image review records. Complete a new board review first.')
+    if len(data) < 0x10000 or len(data) > 64*1024*1024 or len(data)&(len(data)-1):
+        raise ValueError('Expected a raw power-of-two SPI or BIOS-region image, 64 KiB to 64 MiB; capsules need separate extraction/review')
+    if data[0x10:0x14] == b'\x5a\xa5\xf0\x0f' and intel_bios_region(data) is None:
+        raise ValueError('Invalid Intel descriptor BIOS region')
     start, end = intel_bios_region(data) or (0, len(data))
     fit = struct.unpack_from('<Q', data, len(data)-0x40)[0]-(2**32-len(data))
     if not start <= fit < end-0x40 or data[fit:fit+8] != b'_FIT_   ':
@@ -66,7 +96,7 @@ def prepare_layout(data):
         raise ValueError('Invalid FIT size')
     if any(data[fit+14+16*i]&127 in (0x0b, 0x0c, 0x10) for i in range(count)):
         raise ValueError('Signed boot-policy/key-manifest FIT entry requires its own review')
-    report = inventory(data)
+    report = inventory(data, assess=False)
     found = report['factory_defaults']
     if report['parse_errors'] or sorted(item['variable'] for item in found) != sorted(FACTORY_KEYS):
         raise ValueError('Expected exactly one complete readable factory key set')
@@ -80,15 +110,20 @@ def prepare_layout(data):
     files = list(ffs_files(data,volume))
     if not all(item[-1] for item in files):
         raise ValueError('Invalid FFS checksum')
-    drivers = {str(UUID(bytes_le=h[:16])):digest(h+b) for _,_,h,b,_ in files if h[:16] in DRIVER_GUIDS}
-    if drivers != profile['driver_hashes']:
-        raise ValueError('Enrollment driver fingerprints differ')
+    family = enrollment_family(files)
     slots = {DEFAULT_GUIDS[h[:16]]:(offset,nxt,h,raw_payload(body))
              for offset,nxt,h,body,_ in files if h[:16] in DEFAULT_GUIDS}
     if any(signature_lists(slots[name][3])[0] == b'' or
            digest(signature_lists(slots[name][3])[0]) != expected for name,expected in FACTORY_KEYS.items()):
         raise ValueError('Factory certificate baseline differs')
-    return profile, volume, files, slots
+    historical = reviewed(data)
+    if historical is not None and family['driver_hashes'] != historical['driver_hashes']:
+        raise ValueError('Historical image enrollment driver fingerprints differ')
+    evidence = dict(id=family['id'], enrollment_family=family['id'],
+                    recognition='native-driver-family', driver_hashes=family['driver_hashes'],
+                    historical_image=None if historical is None else historical['id'],
+                    factory_baseline='reviewed-ami-test-pk-2011')
+    return evidence, volume, files, slots
 
 
 def esl(certificate):
@@ -173,6 +208,30 @@ def pack_default(header, auth):
     return make_ffs(header[:16],2,body)
 
 
+def independent_parser(data, image, executable):
+    """Parse both temporary images before any deliverable is created."""
+    version = subprocess.run([executable, '--version'], check=True, capture_output=True,
+                             timeout=30).stdout.decode(errors='replace').strip()
+    if not version:
+        raise ValueError('Independent parser did not identify its version')
+    diagnostics = []
+    with tempfile.TemporaryDirectory(prefix='ca2023-parser-') as directory:
+        for name, content in (('input.bin', data), ('output.bin', image)):
+            path = Path(directory)/name
+            path.write_bytes(content)
+            result = subprocess.run([executable, str(path), 'report'], check=True,
+                                    capture_output=True, timeout=180)
+            report_path = Path(str(path)+'.report.txt')
+            if not report_path.is_file() or not report_path.stat().st_size:
+                raise ValueError('Independent UEFIExtract did not produce a nonempty report')
+            diagnostics.append((result.stdout, result.stderr))
+    if diagnostics[0] != diagnostics[1]:
+        raise ValueError('Independent UEFIExtract diagnostics changed; candidate was not saved. Review input/output parser results.')
+    return dict(tool='UEFIExtract', version=version, executable_sha256=digest(Path(executable).read_bytes()),
+                result='PASS', policy='Successful parsing and identical input/output diagnostics',
+                diagnostics_sha256=digest(diagnostics[0][0]+b'\x00'+diagnostics[0][1]))
+
+
 def build(args):
     from cryptography import x509
     from cryptography.hazmat.primitives import serialization
@@ -183,6 +242,10 @@ def build(args):
         raise ValueError('Output image and report need distinct unused paths')
     data = read_image(args.image)
     profile, volume, files, slots = prepare_layout(data)
+    supplied = getattr(args, 'uefiextract', None)
+    extractor = str(supplied.resolve()) if supplied else shutil.which('UEFIExtract') or shutil.which('uefiextract')
+    if not extractor or not Path(extractor).is_file():
+        raise ValueError('Independent validation requires UEFIExtract on PATH or --uefiextract PATH')
     cert = x509.load_der_x509_certificate(args.owner_cert.read_bytes())
     password = getpass.getpass('Private PEM key password: ').encode()
     key = serialization.load_pem_private_key(args.owner_key.read_bytes(),password=password)
@@ -234,7 +297,7 @@ def build(args):
     replay[original_tail:tail]=image[original_tail:tail]
     if image!=replay or len(image)!=len(data) or list(volumes(image,*(intel_bios_region(data) or (0,len(data)))))!=list(volumes(data,*(intel_bios_region(data) or (0,len(data))))):
         raise ValueError('Unexpected image layout or changed ranges')
-    report = inventory(image)
+    report = inventory(image, assess=False)
     for name,payload in payloads.items():
         matches=[f for f in report['factory_defaults'] if f['variable']==name]
         if len(matches)!=1 or matches[0]['sha256']!=digest(payload):
@@ -251,7 +314,9 @@ def build(args):
             begin = None
     if begin is not None:
         changed_ranges.append([begin, len(image)])
+    independent = independent_parser(data, image, extractor)
     report.update(base_profile=profile['id'],input_sha256=digest(data),
+                  eligibility=profile, independent_parser=independent,
                   pk_replaced=True,owner_certificate_sha256=digest(args.owner_cert.read_bytes()),
                   validation='Offline candidate. This invocation has no physical board test result.',
                   replacement_offsets=replacements,changed_ranges=changed_ranges,
@@ -281,6 +346,7 @@ def main():
     patch.add_argument('--owner-cert',type=Path,required=True)
     patch.add_argument('--certificates',type=Path,required=True)
     patch.add_argument('--replace-platform-key',action='store_true')
+    patch.add_argument('--uefiextract',type=Path,help='Trusted UEFIExtract executable; otherwise discovered on PATH')
     args=cli.parse_args()
     try:
         if args.mode=='inspect':
@@ -289,7 +355,7 @@ def main():
             generate_owner(args)
         else:
             build(args)
-    except (ValueError,OSError,lzma.LZMAError,subprocess.CalledProcessError) as error:
+    except (ValueError,OSError,lzma.LZMAError,subprocess.CalledProcessError,subprocess.TimeoutExpired) as error:
         cli.exit(1,f'Error: {error}\n')
 
 

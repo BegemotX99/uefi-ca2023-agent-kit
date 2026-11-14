@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ami-auth2-lzma-1",
+    "driver_hashes": {
+      "447a1b58-8f3e-4658-abaa-9e7b2280b90a": "e124afa46bf5f6acd42b66e658e410f94bef3de41d91aa98d33d9be4a6c8eb64",
+      "1807040d-5934-41a2-a088-8e0f777f71ab": "07cc65b806c91dc69fb07e932e28627ca8458157b444e386838a24166e19bd28",
+      "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "1fad3b7d0d44a1ecb7f9de419246c48599f0e6ea207e5b498a6da29bfd28a19b"
+    },
+    "evidence_image": "huananzhi-f8-v60",
+    "contract": "AMI key-volume GUID lookup; legacy bare SignedData Auth2; attributes 0x27; reviewed factory trust baseline"
+  },
+  {
+    "id": "ami-auth2-lzma-2",
+    "driver_hashes": {
+      "447a1b58-8f3e-4658-abaa-9e7b2280b90a": "99c6c420c1758b7082c6b58b54a74e21bde3f6f4c2de5c7ca22b9f6a8a032056",
+      "1807040d-5934-41a2-a088-8e0f777f71ab": "0c7425f7ee24830eece0224015ae978a9c1320e3d9ad04b88b9f24d5407ab2cb",
+      "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "e73c03742ec512f90c530429d04ae917ae234e7eeb79081e846050781f032c6b"
+    },
+    "evidence_image": "qiyida-h9s-001",
+    "contract": "AMI key-volume GUID lookup; legacy bare SignedData Auth2; attributes 0x27; reviewed factory trust baseline"
+  },
+  {
+    "id": "ami-auth2-lzma-3",
+    "driver_hashes": {
+      "447a1b58-8f3e-4658-abaa-9e7b2280b90a": "ef93ef6285972247c40a00c5aa5951abba1d769a2f858175481f990c5b96421a",
+      "1807040d-5934-41a2-a088-8e0f777f71ab": "3435bef28bd78f2d6da1cdfd36a54e0e6043c6564f7187a59e983edd666e2619",
+      "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "f984b218a2d01e747c376854eb83f715190b5c433e382ba63c8208194c5c3cb1"
+    },
+    "evidence_image": "qiyida-h9s-002",
+    "contract": "AMI key-volume GUID lookup; legacy bare SignedData Auth2; attributes 0x27; reviewed factory trust baseline"
+  },
+  {
+    "id": "ami-auth2-lzma-4",
+    "driver_hashes": {
+      "447a1b58-8f3e-4658-abaa-9e7b2280b90a": "0349edee4b3a118784d32bacfc65173ea919bcf479fdeaea7fd8bccae207ac91",
+      "1807040d-5934-41a2-a088-8e0f777f71ab": "a978ec19913695c7e830d411a98e6e2449fe809602859a1446625e5042a10e06",
+      "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "67def3900633fcf3a67e47284dd1486da644dcb7c8245971cbe3990454a139e5"
+    },
+    "evidence_image": "machinist-mr9s-x9mrs010-mi899",
+    "contract": "AMI key-volume GUID lookup; legacy bare SignedData Auth2; attributes 0x27; reviewed factory trust baseline"
+  }
+]

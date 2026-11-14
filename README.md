@@ -7,7 +7,7 @@ Start by asking your agent to read this repository's `AGENTS.md` and `skills/uef
 ## What you get
 
 - A standard-library Python inspector for Intel SPI maps, directly visible AMI FFS volumes, compressed factory key files, and pinned Microsoft certificate fingerprints.
-- A builder for four exact reviewed stock images, including the matching 8 MiB BIOS regions. New board layouts require review before adding a manifest entry.
+- An automatic builder for the supported AMI layout and four reviewed enrollment-driver families. Different whole-image hashes, motherboard names and discovered volume offsets do not require individual profiles. Unknown native code and unsupported layouts remain inspection-only.
 - Fresh encrypted owner-key generation on your own machine.
 - Technical instructions for new boards, Auth2 signatures, FFS placement, enrollment, Windows verification, and manual hex editing.
 - Public owner certificates from earlier Qiyida and Machinist builds, with their SHA-256 fingerprints and provenance.
@@ -16,7 +16,7 @@ The tools operate on files. A physical firmware flash needs its own exact target
 
 ## Quick start
 
-Python 3.11 or newer is required. Inspection uses Python's standard library. Building and key generation also require `cryptography` and OpenSSL on PATH. On Windows, choose an OpenSSL distribution you trust. On Linux, use the distribution package manager.
+Python 3.11 or newer is required. Inspection uses Python's standard library. Building and key generation also require `cryptography` and OpenSSL on PATH. Every build requires trusted UEFIExtract on PATH or its path supplied through `--uefiextract`. On Windows, choose an OpenSSL distribution you trust. On Linux, use the distribution package manager.
 
 ```sh
 git clone https://github.com/BegemotX99/uefi-ca2023-agent-kit.git
@@ -38,7 +38,9 @@ Download the four public Microsoft DER certificates using the links in the [cert
 python skills/uefi-ca2023/scripts/uefi_ca2023.py build /path/to/stock.bin /path/to/new.bin --report /path/to/new-report.json --owner-key /private/location/owner.key.pem --owner-cert /private/location/owner.der --certificates /path/to/microsoft-der-directory --replace-platform-key
 ```
 
-This builder replaces the reviewed AMI test PK with your public owner certificate, retains the original 2011 KEK/db entries, adds all four Microsoft 2023 certificates, and preserves the factory dbx. It prompts for the encrypted key password. It checks signatures with OpenSSL, checks the final firmware inventory and payloads, and saves a new image of the original length with a JSON report. Each fresh signature can produce a different compressed length and output hash.
+The `inspect` result includes `automatic_patch.status`, a matched enrollment family or a specific refusal reason, discovered volume bounds and available erased tail. Layout eligibility is a preflight result; final capacity, signing and output validation remain build-time checks. See [automatic detection](skills/uefi-ca2023/references/automatic-detection.md).
+
+This builder replaces the reviewed AMI test PK with your public owner certificate, retains the original 2011 KEK/db entries, adds all four Microsoft 2023 certificates, and preserves the factory dbx. It prompts for the encrypted key password. It checks signatures with OpenSSL, checks the final firmware inventory and payloads, requires successful UEFIExtract parsing with identical input/output diagnostics, and saves a new image of the original length with a JSON report. Each fresh signature can produce a different compressed length and output hash.
 
 When preserving an existing OEM PK is a requirement, use the policy paths described in the [signing guide](skills/uefi-ca2023/references/certificates-and-signing.md). The included builder implements the explicit owner-PK migration workflow.
 
@@ -60,6 +62,7 @@ Example request after installing or reading the repository:
 ## Documentation
 
 - [Complete start-to-finish guide: original Microsoft downloads, PC tools, signing, integration and testing](skills/uefi-ca2023/references/end-to-end-guide.md)
+- [Automatic layout detection, eligibility and retained checks](skills/uefi-ca2023/references/automatic-detection.md)
 - [Project report and validation history](docs/REPORT.md)
 - [Skill entry point](skills/uefi-ca2023/SKILL.md)
 - [Firmware layout and new-board review](skills/uefi-ca2023/references/firmware-workflow.md)
@@ -73,7 +76,7 @@ Example request after installing or reading the repository:
 
 ## Supported scope
 
-Inspection covers factory files that the parser understands. Missing results require deeper extraction and review. Coverage across motherboard brands comes from the engineering workflow, while the supplied builder is restricted to exact reviewed images. A board name, familiar GUID, or a matching CPU alone cannot establish compatibility.
+Inspection covers factory files that the parser understands. Missing results require deeper extraction and review. The builder identifies supported storage and native enrollment code independently of whole-image identity. It retains the original reviewed factory key baseline. Another PK or trust baseline, different enrollment code, nested/capsule storage or ambiguous copies needs review of that format or family. A board name, familiar GUID, or a matching CPU alone cannot establish compatibility.
 
 Historical evidence applies to each recorded artifact. A successful emulated parser call establishes that routine's behavior for its supplied arguments. Physical POST, enrollment, Secure Boot enforcement, and Windows servicing require hardware evidence. This publication's rebuilt artifacts have offline validation only.
 

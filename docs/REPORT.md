@@ -42,7 +42,7 @@ The firmware binaries, original dumps, signing private keys and personal Windows
 
 ## Limits and publication decisions
 
-The cross-board workflow describes how to establish compatibility. The public builder accepts four reviewed inputs and matching 8 MiB BIOS regions. It requires local owner keys, explicit PK replacement, pinned Microsoft DER objects and OpenSSL signature verification. The public inspector covers directly visible AMI FFS default files and reports unsupported or ambiguous parsing. Broader compatibility needs new adapters and evidence.
+The first publication accepted four reviewed inputs and matching 8 MiB BIOS regions. The automatic-detection revision below replaces that whole-image gate with reviewed native-driver family recognition while retaining the factory baseline and other checks. It requires local owner keys, explicit PK replacement, pinned Microsoft DER objects and OpenSSL signature verification. The public inspector covers directly visible AMI FFS default files and reports unsupported or ambiguous parsing. Broader implementation support needs new adapters and evidence.
 
 The project record does not provide physical enrollment success for the H9S and MR9S candidates. The F8's USB Memory Lab hardware pass applies to that USB artifact and supplies no physical evidence for another firmware image. Firmware modification and image construction do not confer Microsoft certification or complete Windows servicing automatically.
 
@@ -61,3 +61,17 @@ The repository uses MIT for original code and documentation. Third-party firmwar
 - Microsoft's four original DER files at upstream commit `3d762aecbaecd12402efd21ba89c8c7bd40da4bd` were downloaded independently and matched the pinned fingerprints.
 
 The temporary test keys and candidate firmware images were discarded after the checks. These tests do not add physical motherboard, enrollment or Windows-servicing evidence for the new builds. CI runs the synthetic tests; the real-image tests require local firmware inputs that are deliberately excluded from the public repository.
+
+## Automatic family detection revision, 14 November 2026
+
+The whole-image allowlist gate was replaced by detected layout plus a separate registry of four reviewed complete native-driver families. No per-BIOS profile is required when the native implementation, storage contract and original factory trust baseline match. The historical image registry remains for provenance. Exact native-driver fingerprints, all original key-baseline hashes, FIT/FFS checks, erased space, signing/readback and unchanged-byte checks remain required. Duplicate native drivers are explicitly rejected. Independent UEFIExtract report generation and input/output diagnostic comparison are now enforced inside every build before saving deliverables.
+
+Validation for this revision:
+
+- 17 regression tests passed. New cases cover unlisted hashes, moved volume locations, unknown native code, duplicate keys/drivers, altered factory policy, invalid checksums, non-erased tail, selected authenticated FIT entries, missing independent reports and changed parser diagnostics.
+- Eight full signed-build cases passed for the four original images and their 8 MiB regions, using UEFIExtract NE A76 alongside cryptographic and in-memory checks.
+- Four more full signed-build cases passed using two images absent from the historical registry and their BIOS regions: H9S001 dump `5558071512bb8b3aa4ef27cb9e163cf72540815957ade490695f8a9ef06580a8` and July H9S002 dump `6f517cdda9ca3512045242e8457d88682725d7cd7a2e61906f39804ca920d0b6`. Both were recognized solely through detected layout, native family and factory baseline. Their full-image hashes were not added to the eligibility registry.
+- The local MR9A Pro Max input remained inspection-only because its native driver set was unmatched. ZX-X99Z-D4M4 and K9 v5.1 inputs remained inspection-only because one complete supported factory-key set could not be established. These results do not constitute automatic support for those boards.
+- The updated skill passed its schema validator. Temporary signing identities and candidate images were discarded; no new physical board test is claimed.
+
+This change removes repetitive image profiling within supported implementations. It cannot establish compatibility for arbitrary enrollment code, another factory trust baseline, different storage formats or authenticated capsules. Those need an implementation review once, rather than a profile for each motherboard image. See [automatic detection](../skills/uefi-ca2023/references/automatic-detection.md).

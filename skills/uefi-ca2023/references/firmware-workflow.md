@@ -39,7 +39,7 @@ Those experiments establish a parser result. Enforcing a signer in User Mode, fu
 6. If the object outgrows its old allocation, prove that the native reader finds it by GUID. Retire the old file allocation with a valid FFS pad file. Append the replacement inside verified erased space in the same volume. Preserve all surrounding file offsets. A run of FF bytes inside another file is still allocated data.
 7. Enumerate the output from scratch. Require exactly one active default for each variable, valid checksums, matching decoded payloads and enough unallocated volume tail.
 
-The supplied builder restricts input to the exact review records and native driver hashes. It always creates its own owner-PK migration with fresh local signatures. Editing the manifest to accept an arbitrary image defeats that review requirement. Use [board-review.md](board-review.md) to establish new evidence first.
+The supplied builder detects layout and requires a reviewed complete native-driver family and original factory trust baseline. Whole-image review records supply historical identity rather than eligibility. It always creates its own owner-PK migration with fresh local signatures. Adding an image hash cannot authorize unfamiliar code. Use [board-review.md](board-review.md) and [automatic-detection.md](automatic-detection.md) to establish support for another implementation.
 
 ## Verify the entire artifact
 
