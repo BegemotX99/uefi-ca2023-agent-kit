@@ -8,6 +8,7 @@ Start by asking your agent to read this repository's `AGENTS.md` and `skills/uef
 
 ## What you get
 
+- [Prism portable USB creator](usb_creator/README.md), with motherboard photos, four embedded firmware selections and a full-16-MiB backup/write FreeDOS menu. Legacy/CSM boot; the new tool still needs physical USB/flash validation.
 - [Portable Windows EXE in one ZIP](windows/README.md), with Open, Analyse, Save As, live log and all runtime dependencies included.
 - [Four hardware-tested original/modified BIOS pairs](bioses/README.md), published as full 16 MiB release ZIPs. The maintainer confirmed successful tests of both images for F8 V6.0, MR9S, H9S001 and H9S002 on 14 November 2026.
 - A standard-library Python inspector for Intel SPI maps, directly visible AMI FFS volumes, compressed factory key files, and pinned Microsoft certificate fingerprints.
@@ -16,7 +17,7 @@ Start by asking your agent to read this repository's `AGENTS.md` and `skills/uef
 - Technical instructions for new boards, Auth2 signatures, FFS placement, enrollment, Windows verification, and manual hex editing.
 - Public owner certificates from earlier Qiyida and Machinist builds, with their SHA-256 fingerprints and provenance.
 
-The tools operate on files. A physical firmware flash needs its own exact target, flashing procedure, recovery plan, and user authorization. A malformed image can prevent the motherboard from starting.
+The certificate patcher operates on files. The separate Prism USB creator formats a selected USB only after explicit erase confirmation, and its DOS menu writes firmware only after typed confirmation. A physical firmware flash needs its own exact target, flashing procedure, recovery plan, and user authorization. A malformed image can prevent the motherboard from starting.
 
 ## Quick start
 
