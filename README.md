@@ -2,6 +2,8 @@
 
 Firmware engineering instructions and portable tools for adding Microsoft Secure Boot 2023 certificates to reviewed AMI X99 firmware. The repository includes a report of the original work, a skill for Codex and Claude Code, and an offline image inspector and builder.
 
+> **Prebuilt images are signed with the author's key. To manage Secure Boot yourself, build the firmware with your own key.**
+
 Start by asking your agent to read this repository's `AGENTS.md` and `skills/uefi-ca2023/SKILL.md`, inspect your supplied firmware, and report the detected layout and eligibility. An agent with repository access can follow these instructions directly. Installation enables automatic skill discovery in supported clients.
 
 ## What you get

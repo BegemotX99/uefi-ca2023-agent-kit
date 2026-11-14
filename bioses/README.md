@@ -1,5 +1,7 @@
 # Hardware-tested original and CA 2023-modified BIOS pairs
 
+> **Prebuilt images are signed with the author's key. To manage Secure Boot yourself, build the firmware with your own key.**
+
 The maintainer confirmed on **14 November 2026** that both the original and modified BIOS were tested successfully on each of these four boards. These are **user-reported hardware passes**, supplemented by offline file, certificate and preservation checks. Publication does not claim an independent hardware rerun or testing of every firmware feature.
 
 [Download the GitHub release](https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/tag/tested-bios-2026-11-14).
