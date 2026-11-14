@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+*.bin
+*.rom
+*.cap
+*.zip
+*.rar
+*.pem
+*.key
+*.pfx
+*.p12
+*.dpapi
+private/
+inputs/
+artifacts/

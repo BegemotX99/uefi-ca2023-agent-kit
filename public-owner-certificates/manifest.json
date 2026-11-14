@@ -1,0 +1,18 @@
+[
+  {
+    "id": "qiyida-h9s",
+    "file": "qiyida-h9s.der",
+    "sha256": "67682c274f0aff16c5ba8396c4a7da7228bb4258be8c6a1dbb2545be2c47dcab",
+    "subject": "CN=Qiyida X99 H9S Secure Boot Owner",
+    "purpose": "Public reference for previous project builds. New users generate their own keys.",
+    "private_key": "Retained locally by the original maintainer. Excluded from this repository."
+  },
+  {
+    "id": "machinist-mr9s",
+    "file": "machinist-mr9s.der",
+    "sha256": "b110c1f6de8903b545385fbf139a80e2e5ed24292a9be1bf92fc2ef54f2b078d",
+    "subject": "CN=Machinist X99-MR9S Secure Boot Owner",
+    "purpose": "Public reference for previous project builds. New users generate their own keys.",
+    "private_key": "Retained locally by the original maintainer. Excluded from this repository."
+  }
+]

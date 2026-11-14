@@ -1,0 +1,4 @@
+interface:
+  display_name: "UEFI CA 2023"
+  short_description: "Inspect and migrate firmware Secure Boot defaults"
+  default_prompt: "Use $uefi-ca2023 to inspect my stock BIOS and prepare a verified CA 2023 migration candidate."
