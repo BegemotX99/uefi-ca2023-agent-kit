@@ -1,5 +1,7 @@
 # Prism 1.0.0 preview validation
 
+**1.0.1 addendum:** the reviewed FM25W128 entry and the paired DOS integrity pin were added after the report below. 31 source tests passed, including four part-table cases. The rebuilt EXE passed clean-PATH self-test and all four images passed independent FAT readback. The GUI's file-only MR9S workflow passed again. Current QEMU cases verified error propagation, genuine FPT startup and refusal of a deliberately altered parts table; production USB boot also passed. The unchanged full-write/cancel/corruption control flow retains its 1.0.0 evidence below and was not fully rerun for 1.0.1. Physical FM25W128 detection/read/write remains pending. See [the exact entry, sources and test procedure](FM25W128.md).
+
 Recorded 14 November 2026 on Windows 11 x64. This report covers the new USB creator and DOS wrapper. The embedded BIOSes are unchanged public release assets; their original/modified hardware passes are separately recorded as maintainer-reported in `bioses/catalog.json`.
 
 | Check | Result |

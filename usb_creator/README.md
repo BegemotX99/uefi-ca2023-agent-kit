@@ -2,7 +2,9 @@
 
 A portable **Windows 10/11 x64** application with the Prism interface, real motherboard photos, an embedded firmware selector, USB Refresh, and a live preparation log. One EXE contains Python/Tk, Pillow, the DOS menu, FreeDOS, the vendor flasher, and the four exact published firmware pairs. It needs no setup, installed Python, Rufus, or runtime download. Run it from the PC's internal drive.
 
-[Download the portable EXE or ZIP](https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/tag/prism-usb-creator-v1.0.0). This is a preview release for physical hardware testing; see the validation limits below.
+[Download the portable EXE or ZIP](https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/tag/prism-usb-creator-v1.0.1). This is a preview release for physical hardware testing; see the validation limits below.
+
+**1.0.1 adds the Fudan FM25W128 (`A1 28 18`, 16 MiB) to the reviewed parts table.** This chip was missing from 1.0.0. See [the chip-support report](FM25W128.md). Existing Prism USBs can use the release's small `Prism-USB-Update-1.0.1.zip`: replace `PRISM.EXE`, `FPARTS.TXT` and `SOURCE.ZIP` together in the USB root. Formatting is unnecessary for this update. The paired DOS menu is required because it verifies the exact parts-table hash. Try **1 / Backup entire 16 MiB** first; actual chip detection and hardware read/write compatibility still need confirmation on the target board.
 
 **This USB boots through Legacy/CSM. FreeDOS is not a native UEFI application.** A machine with only UEFI boot and no CSM cannot boot this release. Secure Boot must permit Legacy/CSM boot. The creator itself does not change firmware settings or enrolled keys.
 
@@ -42,7 +44,7 @@ Use **1** for backup, **2** for write, **0** for DOS, or arrow keys and Enter.
 
 The prepared USB contains the selected modified `BIOS.BIN` and full 16 MiB original `FACTORY.BIN`. **FACTORY.BIN is an original reference, not a backup of your physical board.** Use option 1 to retain that board's unique data before a full-chip write. Full images include descriptor and ME as well as the BIOS region, and can replace board-specific data. The menu does not detect or prove motherboard compatibility: the operator must match the actual board and revision to the selected image. CPU model is not used as an allowlist.
 
-The menu pins both `FPT.EXE` and `FPARTS.TXT`; altered tools are rejected. An unsupported SPI part, inaccessible region, locked descriptor, or any FPT error stops the operation. There is no automatic fallback to a partial BIOS-region write. Preserve `FLASH.LOG` and `FPT*.LOG` if stopped. After a write error or failed readback, keep power on and preserve the logs for diagnosis. A successful preflight read does not prove write permission; FPT can still refuse a locked write.
+The menu pins both `FPT.EXE` and the reviewed `FPARTS.TXT`; altered tools are rejected. Version 1.0.1 appends one reviewed Fudan entry to the original vendor table; the Intel EXE is unchanged. An unsupported SPI part, inaccessible region, locked descriptor, or any FPT error stops the operation. There is no automatic fallback to a partial BIOS-region write. Preserve `FLASH.LOG` and `FPT*.LOG` if stopped. After a write error or failed readback, keep power on and preserve the logs for diagnosis. A successful preflight read does not prove write permission; FPT can still refuse a locked write.
 
 ## Validation and limits
 
@@ -74,7 +76,7 @@ Original Prism source is covered by the repository MIT license. Bundled firmware
 - [Mi899](https://github.com/miyconst/Mi899): MR9S and H9S photographs pinned to commit `b278162a158c53eb4849e49032428f26bf88795e`. Photos identify the selection visually; inspect the physical PCB revision yourself.
 - [FreeDOS](https://www.freedos.org/): FreeDOS 1.4 kernel and FreeCOM, with matching source archives in `SOURCE.ZIP`.
 - [Open Watcom v2](https://github.com/open-watcom/open-watcom-v2): compiler; this build used `ow-snapshot.tar.xz` SHA-256 `ebe7db36bc43eabd3c4de0e67f0897ab3a7261253f494dafbca1a116018f7e82`.
-- Intel FPT 9.1.10.1000 and original `FPARTS.TXT`: unmodified DOS utilities from the supplied F8 stock firmware kit; Intel proprietary software, not Prism source.
+- Intel FPT 9.1.10.1000: unmodified DOS utility from the supplied F8 stock firmware kit; Intel proprietary software, not Prism source. Its parts table retains all original rows and appends the documented FM25W128 entry.
 
 `KERNEL.SYS` SHA-256: `932c0c155701eddb7b902f7269a1b2ce31f5c82a6dc195172f2336d18a74e1fb`.
 `COMMAND.COM` SHA-256: `077808379e896476f7f69d62e6c8989d8fc23e8ef58d1c8492db1ac106784107`.

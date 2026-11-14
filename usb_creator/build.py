@@ -13,6 +13,7 @@ import subprocess
 import sys
 import zipfile
 from core import load_assets
+from flash_parts import add_reviewed_parts
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--assets',type=Path,required=True);p.add_argument('--watcom',type=Path,required=True)
@@ -23,6 +24,10 @@ def main():
     assets=a.work/'usb-assets'
     if assets.exists():raise FileExistsError('Choose a new work directory; existing assets are not overwritten')
     shutil.copytree(a.assets,assets)
+    parts=assets/'FPARTS.TXT'
+    parts.write_bytes(add_reviewed_parts(parts.read_bytes()))
+    manifest['version']='1.0.1'
+    manifest['reviewed_flash_additions']=[dict(name='FM25W128',jedec_id='A12818',size_bytes=16777216,erase_size=4096,erase_opcode='20',write_granularity=64,separate_ewsr=False,hardware_test='pending')]
     header='typedef struct {const char *id,*name,*sha256;} Board;\nstatic const Board BOARDS[]={\n'
     header+=',\n'.join('{'+','.join(json.dumps(b[k]) for k in ('id','name','sha256'))+'}' for b in manifest['boards'])+'\n};\n#define BOARD_COUNT 4\n#define PRISM_SIMULATION 0\n'
     for macro,name in [('FPT_HASH','FPT.EXE'),('PARTS_HASH','FPARTS.TXT')]:header+='#define '+macro+' "'+hashlib.sha256((assets/name).read_bytes()).hexdigest()+'"\n'

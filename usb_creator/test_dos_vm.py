@@ -29,7 +29,7 @@ def read_file(image,name):
 def main():
     p=argparse.ArgumentParser()
     for arg in ('work','assets','qemu','qemu-share','watcom'):p.add_argument('--'+arg,type=Path,required=True)
-    p.add_argument('--cases',nargs='+',choices=['success','corrupt','failure','vendor'],default=['success','corrupt','failure','vendor'])
+    p.add_argument('--cases',nargs='+',choices=['success','corrupt','failure','vendor','parts-mismatch'],default=['success','corrupt','failure','vendor'])
     a=p.parse_args();a.work.mkdir(exist_ok=True,parents=True);source=Path(__file__).parent/'dos'
     env=dict(os.environ,WATCOM=str(a.watcom),INCLUDE=str(a.watcom/'h'),PATH=str(a.watcom/'binnt64')+';'+str(a.watcom/'binnt')+';'+os.environ['PATH'])
     def compile(name,out):subprocess.run([str(a.watcom/'binnt64/wcl.exe'),'-q','-bt=dos','-ms','-3','-otexan','-k16384','-i='+str(a.work),'-fe='+str(out),str(source/name)],cwd=a.work,env=env,check=True)
@@ -41,8 +41,9 @@ def main():
     testfiles['AUTOEXEC.BAT']=b'@ECHO OFF\r\nCD \\\r\nSET PATH=.;\\\r\nPRISM.EXE --hash VECTOR.TXT > HASH.TXT\r\nPRISM.EXE\r\n'
     results=[]
     for case in a.cases:
-        payload=dict(testfiles);payload['MODE.TXT']={'success':b'OK','corrupt':b'CORRUPT','failure':b'FAIL','vendor':b'OK'}[case]
-        if case=='vendor':payload['FPT.EXE']=files['FPT.EXE'];payload['PRISM.EXE']=files['PRISM.EXE']
+        payload=dict(testfiles);payload['MODE.TXT']={'success':b'OK','corrupt':b'CORRUPT','failure':b'FAIL','vendor':b'OK','parts-mismatch':b'OK'}[case]
+        if case in ('vendor','parts-mismatch'):payload['FPT.EXE']=files['FPT.EXE'];payload['PRISM.EXE']=files['PRISM.EXE']
+        if case=='parts-mismatch':payload['FPARTS.TXT']+=b'; deliberately changed by test\r\n'
         image=a.work/(case+'.img');build_image(image,256*MIB,payload,(a.assets/'mbr-code.bin').read_bytes(),(a.assets/'fd-boot32.bin').read_bytes())
         log=(a.work/(case+'-qemu.log')).open('w')
         proc=subprocess.Popen([str(a.qemu),'-L',str(a.qemu_share),'-m','128','-display','none','-monitor','stdio','-nic','none','-drive','if=ide,file='+str(image)+',format=raw'],stdin=subprocess.PIPE,stdout=log,stderr=log,text=True,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
@@ -75,6 +76,9 @@ def main():
                 for char in 'FLASH':key('shift-'+char.lower());time.sleep(.15)
                 key('ret');wait_for('SUCCESS:' if case=='success' else 'READBACK VERIFICATION FAILED',600)
                 if case=='success':assert read_file(image,'CHIP.BIN')==files['BIOS.BIN']
+            elif case=='parts-mismatch':
+                wait_for('STOPPED: FPARTS.TXT was changed')
+                assert b'FPT.EXE -d' not in read_file(image,'FLASH.LOG')
             else:
                 wait_for('BACKUP FAILED');assert b'FPT return status: 0;' not in read_file(image,'FLASH.LOG')
             command('screendump '+str(a.work/(case+'.ppm')));time.sleep(.5)

@@ -27,7 +27,7 @@ class App:
         self.root,self.assets=root,Path(assets);self.manifest=load_assets(assets)
         self.board_id='f8';self.drives=[];self.messages=queue.Queue();self.busy=False;self.photos={};self.cards={}
         self.drive_var=tk.StringVar();self.erase=tk.BooleanVar(value=False);self.status=tk.StringVar(value='Choose a motherboard and refresh the USB drive list.')
-        root.title('Prism SPI Flash USB Creator 1.0.0')
+        root.title('Prism SPI Flash USB Creator 1.0.1')
         root.geometry(str(min(1120,root.winfo_screenwidth()-60))+'x'+str(min(850,root.winfo_screenheight()-100)))
         root.minsize(900,600);root.configure(bg=BG)
         style=ttk.Style(root);style.theme_use('clam')
