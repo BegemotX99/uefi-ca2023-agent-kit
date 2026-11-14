@@ -1,0 +1,353 @@
+[
+  {
+    "id": "huananzhi-f8-v60-ca2023",
+    "board": "HUANANZHI X99-F8 GAMING V6.0",
+    "source": "User-supplied stock factory recovery; pinned project baseline.",
+    "test": "hardware-tested original and modified: maintainer reports both passed on 14 November 2026; no independent hardware rerun by the publishing agent",
+    "scope": "owner-PK and full four-certificate 2023 migration",
+    "hardware_test": {
+      "status": "passed",
+      "evidence": "maintainer user report in project conversation",
+      "reported_date": "2026-11-14",
+      "original": "passed",
+      "modified": "passed"
+    },
+    "original": {
+      "file": "ORIGINAL-16MiB.bin",
+      "sha256": "69a8c5e848a440667d8d83820812735e26bf143ce0e6a2312e22f0fa2b9f5734",
+      "size": 16777216
+    },
+    "modified": {
+      "file": "MODIFIED-16MiB.bin",
+      "sha256": "ae75a5e68b7cc72eaca0ce5f92e2173189e553f8191e9dacb2eb9ca64ebdf3a4",
+      "size": 16777216
+    },
+    "independent_parser": {
+      "tool": "UEFIExtract",
+      "version": "NE alpha 76 (Oct 24 2026)",
+      "executable_sha256": "30d063cf42f4798316b0817fad81cf063aa9f35d6dfae66b9665429ca8c07d87",
+      "result": "PASS",
+      "policy": "Successful parsing and identical input/output diagnostics",
+      "diagnostics_sha256": "bc9276106e8f0850b3e705f39f5f37decf755c1998902bc92b903f7cea9bd5a4"
+    },
+    "factory_certificates": {
+      "dbx": [],
+      "PK": [
+        {
+          "subject": "CN=X99-F8 V6.0 Stock Secure Boot Owner",
+          "sha256": "3bf8028f5e06d391e6684879d6b6502f62a86dbb06dc8b323bf2c118c45a1d6f"
+        }
+      ],
+      "KEK": [
+        {
+          "subject": "CN=Microsoft Corporation KEK CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "a1117f516a32cefcba3f2d1ace10a87972fd6bbe8fe0d0b996e09e65d802a503"
+        },
+        {
+          "subject": "CN=Microsoft Corporation KEK 2K CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "3cd3f0309edae228767a976dd40d9f4affc4fbd5218f2e8cc3c9dd97e8ac6f9d"
+        }
+      ],
+      "db": [
+        {
+          "subject": "CN=Microsoft Corporation UEFI CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "48e99b991f57fc52f76149599bff0a58c47154229b9f8d603ac40d3500248507"
+        },
+        {
+          "subject": "CN=Microsoft Windows Production PCA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "e8e95f0733a55e8bad7be0a1413ee23c51fcea64b3c8fa6a786935fddcc71961"
+        },
+        {
+          "subject": "CN=Windows UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "076f1fea90ac29155ebf77c17682f75f1fdd1be196da302dc8461e350a9ae330"
+        },
+        {
+          "subject": "CN=Microsoft UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "f6124e34125bee3fe6d79a574eaa7b91c0e7bd9d929c1a321178efd611dad901"
+        },
+        {
+          "subject": "CN=Microsoft Option ROM UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "e5be3e64c6e66a281457ecdece0d6d0787577aad2a3a0144262c10c14ba8d8f1"
+        }
+      ]
+    },
+    "variable_payload_sha256": {
+      "dbx": "9d1ae9179583bea1df91a12c4ab83937f21569024eea92e3476cd1707790703a",
+      "PK": "268512163febc502117f6596152a3885e80c727d3a483668b08d0bb24f8329ac",
+      "KEK": "cc3a5dbc7b3aec3b60c0da33510bf93f402479bbf445dc360e6111afa70c6342",
+      "db": "36efd124837f3babbd4cc4741a838564a64ecebe93eee1d737cb3cf418737136"
+    },
+    "publication_check": "Hashes, full length, key readback, retained baseline entries, unchanged dbx, descriptor/ME/NVRAM preservation and UEFIExtract checked; certificate-only variants additionally passed full unrelated-byte preservation.",
+    "download_url": "https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/download/tested-bios-2026-11-14/huananzhi-f8-v60-ca2023.zip",
+    "maintainer_key_policy": "Modified owner-PK builds use the original project maintainer public PK. Private signing keys are excluded. No signing service or future update promise is provided.",
+    "archive": {
+      "file": "huananzhi-f8-v60-ca2023.zip",
+      "sha256": "720f0a7c688bb5794b19e34347961fb138e3fbd957b85f32979cd78e74f928e7",
+      "size": 9651681
+    }
+  },
+  {
+    "id": "qiyida-h9s-001-ca2023",
+    "board": "Qiyida X99 H9S X9H9S001",
+    "source": "User-supplied bios original qiyida x99 h9s.rar, x99.rom member.",
+    "test": "hardware-tested original and modified: maintainer reports both passed on 14 November 2026; no independent hardware rerun by the publishing agent",
+    "scope": "owner-PK and full four-certificate 2023 migration",
+    "hardware_test": {
+      "status": "passed",
+      "evidence": "maintainer user report in project conversation",
+      "reported_date": "2026-11-14",
+      "original": "passed",
+      "modified": "passed"
+    },
+    "original": {
+      "file": "ORIGINAL-16MiB.bin",
+      "sha256": "39ded021001560cf0adc7acf0b034d019e640d601a96bfffe2c611f7c1350fbb",
+      "size": 16777216
+    },
+    "modified": {
+      "file": "MODIFIED-16MiB.bin",
+      "sha256": "49c989d4c2aa9bf78a98797f0d2762867e527ff95be50f5670e6453a48cf4ebc",
+      "size": 16777216
+    },
+    "independent_parser": {
+      "tool": "UEFIExtract",
+      "version": "NE alpha 76 (Oct 24 2026)",
+      "executable_sha256": "30d063cf42f4798316b0817fad81cf063aa9f35d6dfae66b9665429ca8c07d87",
+      "result": "PASS",
+      "policy": "Successful parsing and identical input/output diagnostics",
+      "diagnostics_sha256": "2a75646bb6a9a9f763cac39ad755dbebe44eed7edf73ea1a3912dd47df699c52"
+    },
+    "factory_certificates": {
+      "dbx": [],
+      "PK": [
+        {
+          "subject": "CN=Qiyida X99 H9S Secure Boot Owner",
+          "sha256": "67682c274f0aff16c5ba8396c4a7da7228bb4258be8c6a1dbb2545be2c47dcab"
+        }
+      ],
+      "KEK": [
+        {
+          "subject": "CN=Microsoft Corporation KEK CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "a1117f516a32cefcba3f2d1ace10a87972fd6bbe8fe0d0b996e09e65d802a503"
+        },
+        {
+          "subject": "CN=Microsoft Corporation KEK 2K CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "3cd3f0309edae228767a976dd40d9f4affc4fbd5218f2e8cc3c9dd97e8ac6f9d"
+        }
+      ],
+      "db": [
+        {
+          "subject": "CN=Microsoft Corporation UEFI CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "48e99b991f57fc52f76149599bff0a58c47154229b9f8d603ac40d3500248507"
+        },
+        {
+          "subject": "CN=Microsoft Windows Production PCA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "e8e95f0733a55e8bad7be0a1413ee23c51fcea64b3c8fa6a786935fddcc71961"
+        },
+        {
+          "subject": "CN=Windows UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "076f1fea90ac29155ebf77c17682f75f1fdd1be196da302dc8461e350a9ae330"
+        },
+        {
+          "subject": "CN=Microsoft UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "f6124e34125bee3fe6d79a574eaa7b91c0e7bd9d929c1a321178efd611dad901"
+        },
+        {
+          "subject": "CN=Microsoft Option ROM UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "e5be3e64c6e66a281457ecdece0d6d0787577aad2a3a0144262c10c14ba8d8f1"
+        }
+      ]
+    },
+    "variable_payload_sha256": {
+      "dbx": "9d1ae9179583bea1df91a12c4ab83937f21569024eea92e3476cd1707790703a",
+      "PK": "4d12f9800a554117ec254dcf159c3c924606127121d4a59763a40df0d19afd5e",
+      "KEK": "cc3a5dbc7b3aec3b60c0da33510bf93f402479bbf445dc360e6111afa70c6342",
+      "db": "36efd124837f3babbd4cc4741a838564a64ecebe93eee1d737cb3cf418737136"
+    },
+    "publication_check": "Hashes, full length, key readback, retained baseline entries, unchanged dbx, descriptor/ME/NVRAM preservation and UEFIExtract checked; certificate-only variants additionally passed full unrelated-byte preservation.",
+    "download_url": "https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/download/tested-bios-2026-11-14/qiyida-h9s-001-ca2023.zip",
+    "maintainer_key_policy": "Modified owner-PK builds use the original project maintainer public PK. Private signing keys are excluded. No signing service or future update promise is provided.",
+    "archive": {
+      "file": "qiyida-h9s-001-ca2023.zip",
+      "sha256": "6d8e59dcf45cdf39734298793d553346e92b67e3234494f8172be7ca92bee6d8",
+      "size": 8825958
+    }
+  },
+  {
+    "id": "qiyida-h9s-002-ca2023",
+    "board": "Qiyida X99 H9S X9H9S002",
+    "source": "User-supplied qiyida-x99-h9s-20251103-003048.zip, November H9S002 image.",
+    "test": "hardware-tested original and modified: maintainer reports both passed on 14 November 2026; no independent hardware rerun by the publishing agent",
+    "scope": "owner-PK and full four-certificate 2023 migration",
+    "hardware_test": {
+      "status": "passed",
+      "evidence": "maintainer user report in project conversation",
+      "reported_date": "2026-11-14",
+      "original": "passed",
+      "modified": "passed"
+    },
+    "original": {
+      "file": "ORIGINAL-16MiB.bin",
+      "sha256": "f5a9b5ca654fe5c9b280a8b7d09139ec092773f64cf855c4c1596c086f1cb1c3",
+      "size": 16777216
+    },
+    "modified": {
+      "file": "MODIFIED-16MiB.bin",
+      "sha256": "69a3d3ce636440680c9c6c76190f59973ddd709bc60268bd065b32bc2e7a3f82",
+      "size": 16777216
+    },
+    "independent_parser": {
+      "tool": "UEFIExtract",
+      "version": "NE alpha 76 (Oct 24 2026)",
+      "executable_sha256": "30d063cf42f4798316b0817fad81cf063aa9f35d6dfae66b9665429ca8c07d87",
+      "result": "PASS",
+      "policy": "Successful parsing and identical input/output diagnostics",
+      "diagnostics_sha256": "d595d9baa0746aad07bd20e5bd542aa02ba36b74d1dd6217ac4c3f2a0eac4c2d"
+    },
+    "factory_certificates": {
+      "dbx": [],
+      "PK": [
+        {
+          "subject": "CN=Qiyida X99 H9S Secure Boot Owner",
+          "sha256": "67682c274f0aff16c5ba8396c4a7da7228bb4258be8c6a1dbb2545be2c47dcab"
+        }
+      ],
+      "KEK": [
+        {
+          "subject": "CN=Microsoft Corporation KEK CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "a1117f516a32cefcba3f2d1ace10a87972fd6bbe8fe0d0b996e09e65d802a503"
+        },
+        {
+          "subject": "CN=Microsoft Corporation KEK 2K CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "3cd3f0309edae228767a976dd40d9f4affc4fbd5218f2e8cc3c9dd97e8ac6f9d"
+        }
+      ],
+      "db": [
+        {
+          "subject": "CN=Microsoft Corporation UEFI CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "48e99b991f57fc52f76149599bff0a58c47154229b9f8d603ac40d3500248507"
+        },
+        {
+          "subject": "CN=Microsoft Windows Production PCA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "e8e95f0733a55e8bad7be0a1413ee23c51fcea64b3c8fa6a786935fddcc71961"
+        },
+        {
+          "subject": "CN=Windows UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "076f1fea90ac29155ebf77c17682f75f1fdd1be196da302dc8461e350a9ae330"
+        },
+        {
+          "subject": "CN=Microsoft UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "f6124e34125bee3fe6d79a574eaa7b91c0e7bd9d929c1a321178efd611dad901"
+        },
+        {
+          "subject": "CN=Microsoft Option ROM UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "e5be3e64c6e66a281457ecdece0d6d0787577aad2a3a0144262c10c14ba8d8f1"
+        }
+      ]
+    },
+    "variable_payload_sha256": {
+      "dbx": "9d1ae9179583bea1df91a12c4ab83937f21569024eea92e3476cd1707790703a",
+      "PK": "4d12f9800a554117ec254dcf159c3c924606127121d4a59763a40df0d19afd5e",
+      "KEK": "cc3a5dbc7b3aec3b60c0da33510bf93f402479bbf445dc360e6111afa70c6342",
+      "db": "36efd124837f3babbd4cc4741a838564a64ecebe93eee1d737cb3cf418737136"
+    },
+    "publication_check": "Hashes, full length, key readback, retained baseline entries, unchanged dbx, descriptor/ME/NVRAM preservation and UEFIExtract checked; certificate-only variants additionally passed full unrelated-byte preservation.",
+    "download_url": "https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/download/tested-bios-2026-11-14/qiyida-h9s-002-ca2023.zip",
+    "maintainer_key_policy": "Modified owner-PK builds use the original project maintainer public PK. Private signing keys are excluded. No signing service or future update promise is provided.",
+    "archive": {
+      "file": "qiyida-h9s-002-ca2023.zip",
+      "sha256": "7057111c9159075e96785120e9b33c63280d79cb73b8d7ae905f696e002acfb1",
+      "size": 8817870
+    }
+  },
+  {
+    "id": "machinist-mr9s-mi899-ca2023",
+    "board": "Machinist X99-MR9S X9MRS010 / Mi899 stock",
+    "source": "Mi899 stock machinist-x99-mr9s.rom archive; stock bytes match the independently obtained public v6.2 image.",
+    "source_url": "https://github.com/miyconst/Mi899/tree/master/src/Mi899.Data/Bioses",
+    "source_tree": "b278162a158c53eb4849e49032428f26bf88795e",
+    "source_archive_blob": "4fa4c3a807a89a48bfb47e1d8c2c6cdfd432243e",
+    "test": "hardware-tested original and modified: maintainer reports both passed on 14 November 2026; no independent hardware rerun by the publishing agent",
+    "scope": "exact Mi899 stock plus owner-PK and full four-certificate 2023 migration; no repairs or UI additions",
+    "hardware_test": {
+      "status": "passed",
+      "evidence": "maintainer user report in project conversation",
+      "reported_date": "2026-11-14",
+      "original": "passed",
+      "modified": "passed"
+    },
+    "original": {
+      "file": "ORIGINAL-16MiB.bin",
+      "sha256": "a85922196ec5f910fb9d258934d7bd0e113b00263bd2da1a450b5f538342e350",
+      "size": 16777216
+    },
+    "modified": {
+      "file": "MODIFIED-16MiB.bin",
+      "sha256": "d5048d8828fe168544933e9a13f22bc10a6037f3d5fcdc445b62275c5bcf210f",
+      "size": 16777216
+    },
+    "independent_parser": {
+      "tool": "UEFIExtract",
+      "version": "NE alpha 76 (Oct 24 2026)",
+      "executable_sha256": "30d063cf42f4798316b0817fad81cf063aa9f35d6dfae66b9665429ca8c07d87",
+      "result": "PASS",
+      "policy": "Successful parsing and identical input/output diagnostics",
+      "diagnostics_sha256": "943b0ef36cd040b599f3a8fb81e4396a722682c1f423558b1d59e7856f477830"
+    },
+    "factory_certificates": {
+      "dbx": [],
+      "PK": [
+        {
+          "subject": "CN=Machinist X99-MR9S Secure Boot Owner",
+          "sha256": "b110c1f6de8903b545385fbf139a80e2e5ed24292a9be1bf92fc2ef54f2b078d"
+        }
+      ],
+      "KEK": [
+        {
+          "subject": "CN=Microsoft Corporation KEK CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "a1117f516a32cefcba3f2d1ace10a87972fd6bbe8fe0d0b996e09e65d802a503"
+        },
+        {
+          "subject": "CN=Microsoft Corporation KEK 2K CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "3cd3f0309edae228767a976dd40d9f4affc4fbd5218f2e8cc3c9dd97e8ac6f9d"
+        }
+      ],
+      "db": [
+        {
+          "subject": "CN=Microsoft Corporation UEFI CA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "48e99b991f57fc52f76149599bff0a58c47154229b9f8d603ac40d3500248507"
+        },
+        {
+          "subject": "CN=Microsoft Windows Production PCA 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+          "sha256": "e8e95f0733a55e8bad7be0a1413ee23c51fcea64b3c8fa6a786935fddcc71961"
+        },
+        {
+          "subject": "CN=Windows UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "076f1fea90ac29155ebf77c17682f75f1fdd1be196da302dc8461e350a9ae330"
+        },
+        {
+          "subject": "CN=Microsoft UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "f6124e34125bee3fe6d79a574eaa7b91c0e7bd9d929c1a321178efd611dad901"
+        },
+        {
+          "subject": "CN=Microsoft Option ROM UEFI CA 2023,O=Microsoft Corporation,C=US",
+          "sha256": "e5be3e64c6e66a281457ecdece0d6d0787577aad2a3a0144262c10c14ba8d8f1"
+        }
+      ]
+    },
+    "variable_payload_sha256": {
+      "dbx": "9d1ae9179583bea1df91a12c4ab83937f21569024eea92e3476cd1707790703a",
+      "PK": "a6ba79eda5b5a16a1bc143870abcad595e6429a955065f82574dc38b19532ae6",
+      "KEK": "cc3a5dbc7b3aec3b60c0da33510bf93f402479bbf445dc360e6111afa70c6342",
+      "db": "36efd124837f3babbd4cc4741a838564a64ecebe93eee1d737cb3cf418737136"
+    },
+    "publication_check": "Hashes, full length, key readback, retained baseline entries, unchanged dbx, descriptor/ME/NVRAM preservation and UEFIExtract checked; certificate-only variants additionally passed full unrelated-byte preservation.",
+    "download_url": "https://github.com/BegemotX99/uefi-ca2023-agent-kit/releases/download/tested-bios-2026-11-14/machinist-mr9s-mi899-ca2023.zip",
+    "maintainer_key_policy": "Modified owner-PK builds use the original project maintainer public PK. Private signing keys are excluded. No signing service or future update promise is provided.",
+    "archive": {
+      "file": "machinist-mr9s-mi899-ca2023.zip",
+      "sha256": "159f5f81e4d873b20e4320072bae038d8c698954fa0854ba0dfaaf6c3f4d9ec6",
+      "size": 9549035
+    }
+  }
+]

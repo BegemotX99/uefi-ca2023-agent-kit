@@ -9,7 +9,7 @@
       "1807040d-5934-41a2-a088-8e0f777f71ab": "07cc65b806c91dc69fb07e932e28627ca8458157b444e386838a24166e19bd28",
       "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "1fad3b7d0d44a1ecb7f9de419246c48599f0e6ea207e5b498a6da29bfd28a19b"
     },
-    "validation": "Hardware success reported in the project conversation. Per-build Windows evidence was not independently reproduced for this repository."
+    "validation": "Maintainer reported successful hardware tests of both original and released CA 2023-modified image on 14 November 2026. No independent rerun or blanket feature validation is asserted. See bioses/catalog.json for released artifact hashes."
   },
   {
     "id": "qiyida-h9s-001",
@@ -21,7 +21,7 @@
       "1807040d-5934-41a2-a088-8e0f777f71ab": "0c7425f7ee24830eece0224015ae978a9c1320e3d9ad04b88b9f24d5407ab2cb",
       "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "e73c03742ec512f90c530429d04ae917ae234e7eeb79081e846050781f032c6b"
     },
-    "validation": "Offline image and native Setup Mode parser checks recorded. Physical board enrollment pending."
+    "validation": "Maintainer reported successful hardware tests of both original and released CA 2023-modified image on 14 November 2026. No independent rerun or blanket feature validation is asserted. See bioses/catalog.json for released artifact hashes."
   },
   {
     "id": "qiyida-h9s-002",
@@ -33,7 +33,7 @@
       "1807040d-5934-41a2-a088-8e0f777f71ab": "3435bef28bd78f2d6da1cdfd36a54e0e6043c6564f7187a59e983edd666e2619",
       "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "f984b218a2d01e747c376854eb83f715190b5c433e382ba63c8208194c5c3cb1"
     },
-    "validation": "Offline image, signature and native DXE/SMM Setup Mode parser checks recorded. Physical board enrollment pending."
+    "validation": "Maintainer reported successful hardware tests of both original and released CA 2023-modified image on 14 November 2026. No independent rerun or blanket feature validation is asserted. See bioses/catalog.json for released artifact hashes."
   },
   {
     "id": "machinist-mr9s-x9mrs010-mi899",
@@ -45,6 +45,6 @@
       "1807040d-5934-41a2-a088-8e0f777f71ab": "a978ec19913695c7e830d411a98e6e2449fe809602859a1446625e5042a10e06",
       "4551f2f5-c684-4f27-936f-c7b04a5c5ff1": "67def3900633fcf3a67e47284dd1486da644dcb7c8245971cbe3990454a139e5"
     },
-    "validation": "Stock Mi899 ROM. Offline image, signature and native DXE/SMM parser checks recorded. Physical board enrollment pending."
+    "validation": "Maintainer reported successful hardware tests of both original and released CA 2023-modified image on 14 November 2026. No independent rerun or blanket feature validation is asserted. See bioses/catalog.json for released artifact hashes."
   }
 ]

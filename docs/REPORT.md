@@ -15,9 +15,9 @@ This addresses the firmware's built-in default trust set. Enrolling that set, se
 | Board/build | Full 16 MiB input SHA-256 | Evidence |
 |---|---|---|
 | HUANANZHI X99-F8 V6.0 | `69a8c5e848a440667d8d83820812735e26bf143ce0e6a2312e22f0fa2b9f5734` | Prior project profile records hardware-tested migration. Conversation reports success. Publication rebuilds require their own test. |
-| Qiyida H9S X9H9S001, archive stock | `39ded021001560cf0adc7acf0b034d019e640d601a96bfffe2c611f7c1350fbb` | Offline image, signature and native parser evidence recorded. |
-| Qiyida H9S X9H9S002, November dump | `f5a9b5ca654fe5c9b280a8b7d09139ec092773f64cf855c4c1596c086f1cb1c3` | Native DXE/SMM Setup Mode accepted new KEK/db and rejected malformed objects. Physical board test pending. |
-| Machinist MR9S X9MRS010, Mi899 stock | `a85922196ec5f910fb9d258934d7bd0e113b00263bd2da1a450b5f538342e350` | Native DXE/SMM and structural checks recorded. Physical board test pending. |
+| Qiyida H9S X9H9S001, archive stock | `39ded021001560cf0adc7acf0b034d019e640d601a96bfffe2c611f7c1350fbb` | Offline image, signature and native parser evidence recorded. Maintainer confirmed original/modified hardware pass on 14 November 2026. |
+| Qiyida H9S X9H9S002, November dump | `f5a9b5ca654fe5c9b280a8b7d09139ec092773f64cf855c4c1596c086f1cb1c3` | Native DXE/SMM Setup Mode accepted new KEK/db and rejected malformed objects. Maintainer confirmed original/modified hardware pass on 14 November 2026. |
+| Machinist MR9S X9MRS010, Mi899 stock | `a85922196ec5f910fb9d258934d7bd0e113b00263bd2da1a450b5f538342e350` | Native DXE/SMM and structural checks recorded. Maintainer confirmed original/modified hardware pass on 14 November 2026. |
 
 `reviewed-images.json` additionally pins BIOS-region hashes and each native enrollment-driver FFS hash. Historical output hashes identify the original project artifacts only. Fresh owner keys and signing timestamps create different output hashes.
 
@@ -38,13 +38,13 @@ The Mi899 stock archive was pinned at Git tree `b278162a158c53eb4849e49032428f26
 | Exact Mi899 MR9S stock plus CA 2023 baseline | `d5048d8828fe168544933e9a13f22bc10a6037f3d5fcdc445b62275c5bcf210f` | Byte identity outside certificate allocations verified. |
 | Mi899 MR9S plus CA 2023 and AMI Memtest menu | `d6d36024a31c932933d7e3b0d5c4bc28ccd9d92429fc6ed8cd3f19cc7ed48366` | Native form/control extraction and isolated callback/loader emulation. Physical menu and Secure Boot launch pending. |
 
-The firmware binaries, original dumps, signing private keys and personal Windows logs remain outside this public repository. Public PK certificates and their fingerprints are included for provenance.
+At initial publication, firmware binaries and dumps remained outside the public repository. The maintainer subsequently authorized release assets for the four original/modified pairs listed in [the BIOS catalog](../bioses/README.md) and confirmed that both images in each pair had been tested successfully. Private signing keys, personal Windows logs, repaired personal dumps and other variants remain excluded. Public PK certificates and their fingerprints are included for provenance.
 
 ## Limits and publication decisions
 
 The first publication accepted four reviewed inputs and matching 8 MiB BIOS regions. The automatic-detection revision below replaces that whole-image gate with reviewed native-driver family recognition while retaining the factory baseline and other checks. It requires local owner keys, explicit PK replacement, pinned Microsoft DER objects and OpenSSL signature verification. The public inspector covers directly visible AMI FFS default files and reports unsupported or ambiguous parsing. Broader implementation support needs new adapters and evidence.
 
-The project record does not provide physical enrollment success for the H9S and MR9S candidates. The F8's USB Memory Lab hardware pass applies to that USB artifact and supplies no physical evidence for another firmware image. Firmware modification and image construction do not confer Microsoft certification or complete Windows servicing automatically.
+At first publication the project record did not provide hardware confirmation for the H9S and MR9S candidates. The maintainer's 14 November 2026 confirmation now records successful testing of the released original and modified F8, MR9S, H9S001 and H9S002 pairs. This is user-reported hardware evidence; no independent rerun or test of every feature is asserted. The F8's earlier USB Memory Lab hardware pass still applies only to that USB artifact. Firmware modification and image construction do not confer Microsoft certification or complete Windows servicing automatically.
 
 ## Public-key publishing
 
@@ -75,3 +75,9 @@ Validation for this revision:
 - The updated skill passed its schema validator. Temporary signing identities and candidate images were discarded; no new physical board test is claimed.
 
 This change removes repetitive image profiling within supported implementations. It cannot establish compatibility for arbitrary enrollment code, another factory trust baseline, different storage formats or authenticated capsules. Those need an implementation review once, rather than a profile for each motherboard image. See [automatic detection](../skills/uefi-ca2023/references/automatic-detection.md).
+
+## Tested BIOS release
+
+The maintainer explicitly confirmed successful tests of original and modified F8 V6.0, MR9S, H9S001 and H9S002 firmware and authorized publication of only those four pairs. The release preserves the historical candidate bytes and includes each exact original alongside the corresponding full 16 MiB modification. These are recorded as hardware-tested based on that user report, rather than an independent agent hardware run.
+
+Before packaging, each pair passed full length/hash verification, decoded key readback, original trust-entry preservation, unchanged dbx, descriptor/ME and saved NVRAM comparisons, unrelated-file/byte preservation and independent UEFIExtract comparison. The packages include public PK certificates and explicit maintainer-key custody policy. No private keys, live Windows reports, personal repaired dumps or additional firmware variants were uploaded. See [the released catalog](../bioses/README.md) for downloads and exact hashes.
